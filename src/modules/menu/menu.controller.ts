@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Menu } from 'src/Interface/menu.interface';
 import { MenuDto } from './menu.dto';
 import { MenuService } from './menu.service';
@@ -8,17 +8,27 @@ import { MenuService } from './menu.service';
 export class MenuController {
     constructor(private menuService: MenuService) {}
     @Post()
-    async createMenu(@Body() menuDto: MenuDto): Promise<Menu> {
-        return await this.menuService.addMenu(menuDto)
+    createMenu(@Body() menuDto: MenuDto): Promise<Menu> {
+        return this.menuService.addMenu(menuDto)
     }
 
     @Get()
-    async getEntireMenu(): Promise<Menu[]> {
-        return await this.menuService.getMenu();
+    getEntireMenu(): Promise<Menu[]> {
+        return this.menuService.getMenu();
     }
 
     @Get(':id')
-    async getOneMenuItem(@Param('id') id): Promise<Menu> {
-        return await this.menuService.getMenuItem(id)
+    getOneMenuItem(@Param('id') id): Promise<Menu> {
+        return this.menuService.getMenuItem(id)
+    }
+
+    @Put(':id')
+    updateMenuItem(@Body() menuDto: MenuDto, @Param('id') id): Promise<Menu> {
+        return this.menuService.updateMenu(menuDto, id);
+    }
+
+    @Delete(':id')
+    deleteMenuItem(@Param('id') id): Promise<Menu> {
+        return this.menuService.deleteItem(id)
     }
 }

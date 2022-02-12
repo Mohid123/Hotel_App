@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Menu } from '../../Interface/menu.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -20,10 +20,42 @@ export class MenuService {
     }
 
     async getMenu(): Promise<Menu[]> {
-        return await this.menuModel.find().exec();
+        return await this.menuModel.find().then((result) => {
+            if(result) {
+                return result
+            }
+            else {
+                throw new HttpException('Menu Items not Found', HttpStatus.NOT_FOUND)
+            }
+        }).catch(() => {
+            throw new HttpException('Menu Items not Found', HttpStatus.NOT_FOUND)
+        })
     }
 
     async getMenuItem(id: string): Promise<Menu> {
-        return await this.menuModel.findById({_id: id})
+        return await this.menuModel.findById({_id: id}).then((result) => {
+            if(result) {
+                return result
+            } else {
+                throw new HttpException('Menu Item with this ID does not Exist', HttpStatus.NOT_FOUND)
+            }
+        }).catch(() => {
+            throw new HttpException('Menu Item with this ID does not Exist', HttpStatus.NOT_FOUND)
+        })
+    }
+
+    async updateMenu(menu: MenuDto, id: string): Promise<Menu> {
+        const menuItem = this.menuModel.findOne({_id: id});
+        if(menuItem) {
+            const updatedMenu = await this.menuModel.findByIdAndUpdate(
+                {_id: id},
+                menu
+            );
+            return updatedMenu
+        }
+    }
+
+    async deleteItem(id: string): Promise<Menu> {
+        return await this.menuModel.findByIdAndRemove({_id: id})
     }
 }
