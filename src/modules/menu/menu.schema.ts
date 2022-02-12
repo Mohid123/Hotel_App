@@ -1,10 +1,25 @@
 /* eslint-disable prettier/prettier */
 import * as mongoose from 'mongoose';
-import { Category } from 'src/Interface/category.interface';
 
-export const MenuSchema = new mongoose.Schema({
-    itemName: String,
-    price: Number,
-    description: String,
-    category: Category
-})
+export const MenuSchema = new mongoose.Schema(
+    {
+        _id: { type: String, default: '' },
+        itemName: { type: String, default: '' },
+        price: { type: String, default: '' },
+        description: { type: String, default: '' },
+        category: { type: String, default: '' },
+        servingSize: { type: String, default: '' }
+    },
+    {
+        collection: 'Menu',
+    }
+);
+
+MenuSchema.set('timestamps', true);
+MenuSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: function(doc, ret) {
+    delete ret._id;
+  },
+});

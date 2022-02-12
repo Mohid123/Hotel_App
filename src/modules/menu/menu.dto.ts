@@ -1,17 +1,23 @@
 /* eslint-disable prettier/prettier */
-import { IsString, IsInt, IsObject } from "class-validator";
-import { Category } from "src/Interface/category.interface";
+/* eslint-disable @typescript-eslint/ban-types */
+import { IsString } from "class-validator";
 
-export class MenuDto { 
+export class MenuDto {
+    @IsString()
+    _id: string
+
     @IsString()
     itemName: string
 
-    @IsInt() 
-    price: number;
+    @IsString() 
+    price: string;
 
     @IsString()
     description: string;
 
-    @IsObject()
-    category: Category
+    @IsString()
+    category: string;
+
+    @IsString()
+    servingSize: string;
 }
