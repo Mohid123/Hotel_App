@@ -23,7 +23,7 @@ export class MenuService {
         return await this.menuModel.find().exec();
     }
 
-    async getMenuItem(menu: MenuDto): Promise<Menu> {
-        return this.menuModel.findById({_id: menu._id})
+    async getMenuItem(id: string): Promise<Menu> {
+        return await this.menuModel.findById({_id: id})
     }
 }

@@ -9,16 +9,16 @@ export class MenuController {
     constructor(private menuService: MenuService) {}
     @Post()
     async createMenu(@Body() menuDto: MenuDto): Promise<Menu> {
-        return this.menuService.addMenu(menuDto)
+        return await this.menuService.addMenu(menuDto)
     }
 
     @Get()
     async getEntireMenu(): Promise<Menu[]> {
-        return this.menuService.getMenu();
+        return await this.menuService.getMenu();
     }
 
     @Get(':id')
     async getOneMenuItem(@Param('id') id): Promise<Menu> {
-        return this.menuService.getMenuItem(id)
+        return await this.menuService.getMenuItem(id)
     }
 }
