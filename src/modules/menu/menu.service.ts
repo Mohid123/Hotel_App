@@ -16,7 +16,18 @@ export class MenuService {
             menu._id = new Types.ObjectId().toString();
         }
         const newMenu = new this.menuModel(menu);
-        return await newMenu.save();
+        return await newMenu.save().then((result) => {
+            if(result) {
+                return result
+            }
+            else {
+                throw new HttpException('Failed to Create menu', HttpStatus.BAD_REQUEST)
+            }
+        }).catch((err) => {
+            console.log(err);
+            console.dir(err);
+            throw new HttpException('Failed to Create menu', HttpStatus.BAD_REQUEST)
+        });
     }
 
     async getMenu(): Promise<Menu[]> {
@@ -50,12 +61,33 @@ export class MenuService {
             const updatedMenu = await this.menuModel.findByIdAndUpdate(
                 {_id: id},
                 menu
-            );
+            ).then((result) => {
+                if(result) {
+                    return result
+                }
+                else {
+                    throw new HttpException('Failed to Update Item', HttpStatus.FORBIDDEN)
+                }
+            });
             return updatedMenu
+        }
+        else {
+            throw new HttpException('Menu Item with this ID does not Exist', HttpStatus.NOT_FOUND)
         }
     }
 
     async deleteItem(id: string): Promise<Menu> {
-        return await this.menuModel.findByIdAndRemove({_id: id})
+        if(id) {
+            return await this.menuModel.findByIdAndRemove({_id: id}).then((result) => {
+                if (result) {
+                    return result
+                }
+                else {
+                    throw new HttpException('Menu Item with this ID does not Exist', HttpStatus.NOT_FOUND)
+                }
+            }).catch(() => {
+                throw new HttpException('Menu Item with this ID does not Exist', HttpStatus.NOT_FOUND)
+            })
+        }
     }
 }

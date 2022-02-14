@@ -12,22 +12,22 @@ export class MenuController {
         return this.menuService.addMenu(menuDto)
     }
 
-    @Get()
+    @Get('getAllMenuItems')
     getEntireMenu(): Promise<Menu[]> {
         return this.menuService.getMenu();
     }
 
-    @Get(':id')
+    @Get('getMenuItem/:id')
     getOneMenuItem(@Param('id') id): Promise<Menu> {
         return this.menuService.getMenuItem(id)
     }
 
-    @Put(':id')
+    @Put('updateMenuItem/:id')
     updateMenuItem(@Body() menuDto: MenuDto, @Param('id') id): Promise<Menu> {
         return this.menuService.updateMenu(menuDto, id);
     }
 
-    @Delete(':id')
+    @Delete('deleteMenuItem/:id')
     deleteMenuItem(@Param('id') id): Promise<Menu> {
         return this.menuService.deleteItem(id)
     }
