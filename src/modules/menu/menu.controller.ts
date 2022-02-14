@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { Menu } from 'src/Interface/menu.interface';
 import { MenuDto } from './menu.dto';
 import { MenuService } from './menu.service';
@@ -13,8 +13,12 @@ export class MenuController {
     }
 
     @Get('getAllMenuItems')
-    getEntireMenu(): Promise<Menu[]> {
-        return this.menuService.getMenu();
+    getEntireMenu(
+        @Query('limit') limit = 10,
+        @Query('offset') offset = 0
+        ): Promise<Menu[]> {
+        const menu = this.menuService.getMenu(limit, offset)
+        return menu
     }
 
     @Get('getMenuItem/:id')
