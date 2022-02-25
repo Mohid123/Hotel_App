@@ -4,6 +4,7 @@ import { Menu } from '../../Interface/menu.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { MenuDto } from './menu.dto';
+import { encodeImageToBlurhash } from 'src/utils/utils';
 
 @Injectable()
 export class MenuService {
@@ -15,7 +16,30 @@ export class MenuService {
         if(!menu._id) {
             menu._id = new Types.ObjectId().toString();
         }
+        else {
+            const menuID = await this.menuModel.findById(menu._id);
+            if (!menuID) {
+                menuID._id = menuID.id;
+            } else {
+                menuID._id = new Types.ObjectId().toString();
+            }
+        }
         const newMenu = new this.menuModel(menu);
+        if (newMenu.images && newMenu.images.length) {
+            for await (const mediaObj of newMenu.images) {
+                await new Promise(async (resolve, reject) => {
+                    try {
+                        let mediaUrl = ''
+                        mediaUrl = mediaObj.captureFileURL;
+                        mediaObj['blurHash'] = await encodeImageToBlurhash(mediaUrl);
+                        resolve({})
+                    }
+                    catch (err) {
+                        reject(err)
+                    }
+                })
+            }
+        }
         return await newMenu.save().then((result) => {
             if(result) {
                 return result

@@ -1,23 +1,34 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/ban-types */
-import { IsString } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class MenuDto {
-    @IsString()
+    @ApiProperty()
     _id: string
 
-    @IsString()
+    @ApiProperty()
     itemName: string
 
-    @IsString() 
+    @ApiProperty()
     price: string;
 
-    @IsString()
+    @ApiProperty()
     description: string;
 
-    @IsString()
+    @ApiProperty()
     category: string;
 
-    @IsString()
+    @ApiProperty()
     servingSize: string;
+
+    @ApiProperty({
+        example:
+        [
+            {
+            captureFileURL: '',
+            blurHash:'',
+          }
+        ]
+    })
+    images: any[];
 }

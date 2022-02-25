@@ -8,7 +8,8 @@ export const MenuSchema = new mongoose.Schema(
         price: { type: String, default: '' },
         description: { type: String, default: '' },
         category: { type: String, default: '' },
-        servingSize: { type: String, default: '' }
+        servingSize: { type: String, default: '' },
+        images: { type: Array, default: [] },
     },
     {
         collection: 'Menu',
