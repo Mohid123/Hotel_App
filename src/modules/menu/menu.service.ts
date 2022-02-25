@@ -49,13 +49,18 @@ export class MenuService {
             }
         }).catch((err) => {
             console.log(err);
-            console.dir(err);
             throw new HttpException('Failed to Create menu', HttpStatus.BAD_REQUEST)
         });
     }
 
-    async getMenu(): Promise<Menu[]> {
-        return await this.menuModel.find().then((result) => {
+    async getMenu(limit, offset): Promise<Menu[]> {
+        limit = parseInt(limit) < 1 ? 10 : limit;
+        offset = parseInt(offset) < 0 ? 0 : offset;
+        return await this.menuModel.find().sort({ creationDate: -1 })
+        .skip(parseInt(offset))
+        .limit(parseInt(limit))
+        .exec()
+        .then((result) => {
             if(result) {
                 return result
             }
