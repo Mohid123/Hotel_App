@@ -21,16 +21,18 @@ import {
   import { ApiBearerAuth, ApiBody, ApiTags, ApiConsumes } from '@nestjs/swagger';
   import * as fs from 'fs';
   // import { JwtAuthGuard } from './../../auth/jwt-auth.guard';
-  import jimp from 'jimp';
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const jimp = require('jimp');
   import { URLBody } from './url.dto';
   import { encodeImageToBlurhash } from '../../../utils/utils';
   import { MediaUploadService } from './media-upload.service';
+import config from 'src/config';
   
   const fileFilter = (req, file, callback) => {
     const ext = path.extname(file.originalname);
     console.log(ext);
-    console.log(process.env.whiteListedExtensions);
-    if (!process.env.whiteListedExtensions.includes(ext.toLowerCase())) {
+    // console.log(process.env.whiteListedExtensions);
+    if (!config.whiteListedExtensions.includes(ext.toLowerCase())) {
       req.fileValidationError = 'Invalid file type';
       return callback(
         new HttpException('Invalid file type', HttpStatus.BAD_REQUEST),
@@ -65,7 +67,7 @@ import {
         fileFilter: fileFilter,
         storage: diskStorage({
           destination: function (req, file, cb) {
-            const dir = 'mediaFiles/Menu/' + req.params.folderName.toLowerCase();
+            const dir = 'mediaFiles/' + req.params.folderName.toLowerCase();
   
             fs.exists(dir, (exist) => {
               if (!exist) {
@@ -95,8 +97,7 @@ import {
     ) {
       req.setTimeout(10 * 60 * 1000);
       file['url'] =
-        process.env.URL +
-        'media-upload/mediaFiles/' +
+        'http://localhost:3000/media-upload/mediaFiles/' +
         folderName.toLowerCase() +
         '/' +
         file.filename;
@@ -158,20 +159,20 @@ import {
       folderName = folderName.toLowerCase();
       if (size == 'original') {
         res.sendFile(fileName, {
-          root: 'mediaFiles/NFT/' + folderName,
+          root: 'mediaFiles/' + folderName,
         });
       } else {
-        const dir = 'mediaFiles/NFT/' + folderName + '/' + size + '/' + fileName;
+        const dir = 'mediaFiles/' + folderName + '/' + size + '/' + fileName;
         const exists = fs.existsSync(dir);
         if (!exists) {
           res.sendFile(fileName, {
-            root: 'mediaFiles/NFT/' + folderName,
+            root: 'mediaFiles/' + folderName,
           });
           return;
         }
   
         res.sendFile(fileName, {
-          root: 'mediaFiles/NFT/' + folderName + '/' + size,
+          root: 'mediaFiles/' + folderName + '/' + size,
         });
       }
     }
