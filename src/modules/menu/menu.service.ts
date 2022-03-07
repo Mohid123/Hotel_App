@@ -53,23 +53,24 @@ export class MenuService {
         });
     }
 
-    async getMenu(limit, offset): Promise<Menu[]> {
-        limit = parseInt(limit) < 1 ? 10 : limit;
-        offset = parseInt(offset) < 0 ? 0 : offset;
-        return await this.menuModel.find().sort({ creationDate: -1 })
-        .skip(parseInt(offset))
-        .limit(parseInt(limit))
-        .exec()
-        .then((result) => {
-            if(result) {
-                return result
+    async getMenu(limit, offset) {
+        try {
+            limit = parseInt(limit) < 1 ? 10 : limit;
+            offset = parseInt(offset) < 0 ? 0 : offset;
+            const totalCount = await this.menuModel.countDocuments({});
+            const getItems = await this.menuModel.find()
+            .sort({ creationDate: -1 })
+            .skip(parseInt(offset))
+            .limit(parseInt(limit))
+            .exec()
+            return {
+                data: getItems,
+                totalCount: totalCount
             }
-            else {
-                throw new HttpException('Menu Items not Found', HttpStatus.NOT_FOUND)
-            }
-        }).catch(() => {
-            throw new HttpException('Menu Items not Found', HttpStatus.NOT_FOUND)
-        })
+        }
+        catch {
+            throw new HttpException('Items Not Found', HttpStatus.NOT_FOUND)
+        }
     }
 
     async getMenuItem(id: string): Promise<Menu> {

@@ -14,12 +14,12 @@ export class MenuController {
     }
 
     @Get('getAllMenuItems')
-    getEntireMenu(
+   async getEntireMenu(
         @Query('limit') limit = 10,
         @Query('offset') offset = 0
-        ): Promise<Menu[]> {
+        ) {
         const menu = this.menuService.getMenu(limit, offset)
-        return menu
+        return await menu
     }
 
     @Get('getMenuItem/:id')
