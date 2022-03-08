@@ -7,7 +7,6 @@ import {
     Param,
     Get,
     Res,
-    UseGuards,
     HttpException,
     HttpStatus,
     Query,
@@ -26,12 +25,10 @@ import {
   import { URLBody } from './url.dto';
   import { encodeImageToBlurhash } from '../../../utils/utils';
   import { MediaUploadService } from './media-upload.service';
-import config from 'src/config';
+  import config from 'src/config';
   
   const fileFilter = (req, file, callback) => {
     const ext = path.extname(file.originalname);
-    console.log(ext);
-    // console.log(process.env.whiteListedExtensions);
     if (!config.whiteListedExtensions.includes(ext.toLowerCase())) {
       req.fileValidationError = 'Invalid file type';
       return callback(
